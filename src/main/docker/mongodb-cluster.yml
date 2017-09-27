@@ -1,0 +1,16 @@
+version: '2'
+services:
+    taskapp-mongodb:
+        image: mongo:3.4.8
+        ports:
+            - "27017:27017"
+        command: mongos --configdb taskapp-mongodb-config
+    taskapp-mongodb-node:
+        build:
+            context: .
+            dockerfile: mongodb/MongoDB.Dockerfile
+        command: mongod --replSet rs1 --noprealloc --smallfiles
+    taskapp-mongodb-config:
+        image: mongo:3.4.8
+        container_name: taskapp-mongodb-config
+        command: mongod --noprealloc --smallfiles --configsvr --dbpath /data/db
